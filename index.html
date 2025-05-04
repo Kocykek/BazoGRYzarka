@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>BazoGRYzarka - Najlepsze miejsce do gier online</title>
+    <link rel="stylesheet" href="styles.css">
+    
+</head>
+<body>
+
+    <video autoplay muted loop style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; object-fit: cover; z-index: -2; opacity: 0.15;">>
+        <source src="images/background.mp4" type="video/mp4">
+    </video>
+    <div class="video-overlay"></div>
+    <!-- Main container -->
+    <div class="main-container">
+        
+        <!-- Header section with logo and slogan -->
+        <header class="header">
+            <div class="logo-container">
+                <img src="images/logo2.png" alt="BazoGRYzarka Logo" class="logo">
+            </div>
+            <h1>BazoGRYzarka</h1>
+            <p>Najlepsze miejsce do gier online!</p>
+        </header>
+
+        <!-- Navigation Links (Redirections) -->
+        <nav class="navigation">
+            <a href="sklep.php" class="nav-link">Sklep</a>
+            <a href="#spolecznosc" class="nav-link">Biblioteka</a>
+            <a href="#spolecznosc" class="nav-link">Społeczność</a>
+            <a href="#wsparcie" class="nav-link">Pomoc Techniczna</a>
+        </nav>
+
+    </div>
+<script>
+const canvas = document.getElementById('bg-canvas');
+const ctx = canvas.getContext('2d');
+let shapes = [];
+
+function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+}
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+
+function createShape() {
+    const size = Math.random() * 40 + 100;
+    const speed = Math.random() * 1 + 0.2;
+    const angle = Math.random() * 2 * Math.PI;
+
+    return {
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        size,
+        speed,
+        angle,
+        color: 'rgba(0, 0, 0, 0.05)'
+    };
+}
+
+// Initialize fewer rectangles for less clutter
+for (let i = 0; i < 8; i++) {
+    shapes.push(createShape());
+}
+
+function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    for (let shape of shapes) {
+        shape.y -= shape.speed;
+        if (shape.y + shape.size < 0) {
+            Object.assign(shape, createShape(), { y: canvas.height + shape.size });
+        }
+
+        ctx.save();
+        ctx.translate(shape.x, shape.y);
+        ctx.rotate(shape.angle);
+        ctx.fillStyle = shape.color;
+        ctx.fillRect(-shape.size / 2, -shape.size / 2, shape.size, shape.size);
+        ctx.restore();
+    }
+
+    requestAnimationFrame(animate);
+}
+
+animate();
+
+</script>
+
+</script>
+</body>
+</html>
