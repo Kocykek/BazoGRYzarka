@@ -1,0 +1,10 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /BazoGRYzarka/
+
+    # Route /sklep to sklep.php
+    RewriteRule ^sklep$ sklep.php [L]
+    RewriteRule ^biblioteka$ biblioteka.php [L]
+    # Route /sklep/id/1 to game.php?id=1
+    RewriteRule ^sklep/id/([0-9]+)$ game.php?id=$1 [L,QSA]
+</IfModule>

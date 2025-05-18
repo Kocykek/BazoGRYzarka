@@ -1,6 +1,6 @@
 <?php
 // połączenie
-$conn = new mysqli("localhost", "root", "", "BazoGRYzarka");
+$conn = new mysqli("localhost", "root", "newpassword", "BazoGRYzarka");
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
