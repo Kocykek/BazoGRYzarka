@@ -12,14 +12,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $password = $_POST['password'];
 
     if ($username && $password) {
-        $stmt = $conn->prepare("SELECT password_hash FROM Uzytkownik WHERE Nick = ?");
+        $stmt = $conn->prepare("SELECT Id_Uzytkownika, password_hash FROM Uzytkownik WHERE Nick = ?");
         $stmt->bind_param("s", $username);
         $stmt->execute();
-        $stmt->bind_result($password_hash);
+        $stmt->bind_result($user_id, $password_hash);
         if ($stmt->fetch()) {
             if (password_verify($password, $password_hash)) {
                 $_SESSION['user'] = $username;
-                header("Location: dashboard.php"); // or main page
+                $_SESSION['user_id'] = $user_id;
+                header("Location: profile"); // or main page
                 exit;
             } else {
                 $error = "Niepoprawne hasło.";
@@ -38,21 +39,49 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
-    <title>Logowanie</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BazoGRYzarka - Logowanie</title>
+    <link rel="stylesheet" href="logowanie.css">
 </head>
 <body>
-<h2>Logowanie</h2>
-
-<?php if ($error): ?>
-    <p style="color:red;"><?= htmlspecialchars($error) ?></p>
-<?php endif; ?>
-
-<form method="POST" action="">
-    <label>Login: <input type="text" name="username" required></label><br>
-    <label>Hasło: <input type="password" name="password" required></label><br>
-    <button type="submit">Zaloguj się</button>
-</form>
-
-<p>Nie masz konta? <a href="register.php">Zarejestruj się</a></p>
+    
+    <video autoplay muted loop style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; object-fit: cover; z-index: -2; opacity: 0.15;">>
+        <source src="images/background.mp4" type="video/mp4">
+    </video>
+    <div class="video-overlay"></div>
+    
+    
+    <div class="login-container">
+      
+        <div class="logo-container">
+            <img src="logo2.png" alt="BazoGRYzarka Logo" class="logo">
+        </div>
+		
+        <h1>BazoGRYzarka</h1>
+        <h2>Logowanie</h2>
+        
+        
+        <form class="login-form" method="POST" action="">
+            <div class="form-group">
+                <label for="login">Login</label>
+                <input type="text" id="login" name="username" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="password">Hasło</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            
+            
+            
+            <button type="submit" class="login-btn">ZALOGUJ</button>
+        </form>
+        
+        
+        <div class="register-link">
+            Nie masz jeszcze konta?<br>
+            <a href="register">KLIKNIJ TUTAJ aby się zarejestrować</a>
+        </div>
+    </div>
 </body>
 </html>

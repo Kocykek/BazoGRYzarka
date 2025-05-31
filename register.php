@@ -10,7 +10,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = trim($_POST['username']);
     $email = trim($_POST['email']);
     $password = $_POST['password'];
-    $password_confirm = $_POST['password_confirm'];
+    $password_confirm = $_POST['repeat-password'];
 
     // Basic validation
     if (!$username || !$email || !$password) {
@@ -49,31 +49,61 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 ?>
 
+
 <!DOCTYPE html>
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
-    <title>Rejestracja</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BazoGRYzarka - Rejestracja</title>
+    <link rel="stylesheet" href="rejestracja.css">
 </head>
 <body>
-<h2>Rejestracja</h2>
-
-<?php if ($errors): ?>
-    <ul style="color:red;">
-        <?php foreach ($errors as $e): ?>
-            <li><?= htmlspecialchars($e) ?></li>
-        <?php endforeach; ?>
-    </ul>
-<?php endif; ?>
-
-<form method="POST" action="">
-    <label>Login: <input type="text" name="username" required></label><br>
-    <label>Email: <input type="email" name="email" required></label><br>
-    <label>Hasło: <input type="password" name="password" required></label><br>
-    <label>Potwierdź hasło: <input type="password" name="password_confirm" required></label><br>
-    <button type="submit">Zarejestruj się</button>
-</form>
-
-<p>Masz konto? <a href="login.php">Zaloguj się</a></p>
+<video autoplay muted loop id="bg-video">
+        <source src="background.mp4" type="video/mp4">
+    </video>
+    
+    
+    <div class="overlay"></div>
+    <div class="register-container">
+        
+        <div class="logo-container">
+            <img src="logo2.png" alt="BazoGRYzarka Logo" class="logo">
+        </div>
+        
+		<h1>BazoGRYzarka</h2>
+        <h2>Rejestracja</h2>
+        
+        
+        <form class="register-form" method="POST" action="">
+            <div class="form-group">
+                <label for="login">Login</label>
+                <input type="text" id="login" name="username" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="email">Adres e-mail</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="password">Hasło</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="repeat-password">Powtórz Hasło</label>
+                <input type="password" id="repeat-password" name="repeat-password" required>
+            </div>
+            
+            <button type="submit" class="register-btn">ZAREJESTRUJ</button>
+        </form>
+        
+        
+        <div class="register-link">
+            Masz już konto?<br>
+            <a href="login">KLIKNIJ TUTAJ aby się zalogować</a>
+        </div>
+    </div>
 </body>
 </html>

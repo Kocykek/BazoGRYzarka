@@ -7,4 +7,12 @@
     RewriteRule ^biblioteka$ biblioteka.php [L]
     # Route /sklep/id/1 to game.php?id=1
     RewriteRule ^sklep/id/([0-9]+)$ game.php?id=$1 [L,QSA]
+    RewriteRule ^contact$ kontakt.html [L]
+    RewriteRule ^privacy$ privacy.html [L]
+    RewriteRule ^library$ library.php [L]
+    RewriteRule ^community$ community.php [L]
+    RewriteRule ^login$ login.php [L]
+    RewriteRule ^register$ register.php [L]
+    RewriteRule ^profile$ profile.php [L]
+    RewriteRule ^main$ index.html [L]
 </IfModule>

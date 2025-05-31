@@ -1,4 +1,7 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 // połączenie
 $conn = new mysqli("localhost", "root", "newpassword", "BazoGRYzarka");
 if ($conn->connect_error) {
@@ -12,6 +15,28 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $producent = $_POST['producent'];
     $cena = $_POST['cena'];
     $data_wydania = $_POST['data_wydania'];
+    $zdjGlowne = null;
+    $krotkiOpis = $_POST['krotki_opis'];
+    $dlugiOpis = $_POST['dlugi_opis'];
+
+if (isset($_FILES['zdjGlowne']) && $_FILES['zdjGlowne']['error'] === UPLOAD_ERR_OK) {
+    $tmpName = $_FILES['zdjGlowne']['tmp_name'];
+    $originalName = basename($_FILES['zdjGlowne']['name']);
+    $targetDir = "images/";
+    $fileName = uniqid() . "_" . $originalName;
+    $targetPath = $targetDir . $fileName;
+
+    if (!is_dir($targetDir)) {
+        mkdir($targetDir, 0777, true);
+    }
+
+    if (move_uploaded_file($tmpName, $targetPath)) {
+        $zdjGlowne = $targetPath;
+    } else {
+        echo "<p style='color:red;'>Błąd przesyłania obrazka.</p>";
+        exit;
+    }
+}
 
 
     $conditions = [];
@@ -89,12 +114,31 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $id_systemu = $row['Id_JakieSystemy'];
 
             // ostatecznie insert C:
-            $stmt = $conn->prepare("INSERT INTO Gra (Tytul, Wydawca, Producent, Id_JakieSystemy, Id_Pegi, Cena, DataWydania) 
-                                    VALUES (?, ?, ?, ?, ?, ?, ?)");
-            $stmt->bind_param("sssiiss", $tytul, $wydawca, $producent, $id_systemu, $id_pegi, $cena, $data_wydania);
+            $stmt = $conn->prepare("INSERT INTO Gra (Tytul, Wydawca, Producent, Id_JakieSystemy, Id_Pegi, Cena, DataWydania, zdjGlowne, krotkiOpis, dlugiOpis) 
+                                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+            $stmt->bind_param("sssiisssss", $tytul, $wydawca, $producent, $id_systemu, $id_pegi, $cena, $data_wydania, $fileName, $krotkiOpis, $dlugiOpis);
             
             if ($stmt->execute()) {
+                $id_gry = $stmt->insert_id;
                 echo "<p style='color:green;'>Gra dodana pomyślnie!</p>";
+                if (!empty($_POST['tags_text'])) {
+                    $rawTags = explode(',', $_POST['tags_text']);
+                    foreach ($rawTags as $tagName) {
+                        $tagName = trim($tagName);
+                        if ($tagName === '') continue;
+
+                        $tagName = $conn->real_escape_string($tagName);
+                        $tagCheck = $conn->query("SELECT Id_tagu FROM Tagi WHERE Nazwa = '$tagName'");
+                        if ($tagCheck->num_rows > 0) {
+                        $id_tag = $tagCheck->fetch_assoc()['Id_tagu'];
+                        } else {
+                            $conn->query("INSERT INTO Tagi (Nazwa) VALUES ('$tagName')");
+                            $id_tag = $conn->insert_id;
+                        }
+
+                        $conn->query("INSERT INTO TagGry (Id_Gry, Id_tagu) VALUES ($id_gry, $id_tag)");
+                    }
+                }
             } else {
                 echo "<p style='color:red;'>Błąd: " . $stmt->error . "</p>";
             }
@@ -116,14 +160,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <form method="POST">
+    <form method="POST" enctype="multipart/form-data">
         <h2>Dodaj Nową Grę</h2>
         <input type="text" name="tytul" placeholder="Tytuł gry" required>
         <input type="text" name="wydawca" placeholder="Wydawca" required>
         <input type="text" name="producent" placeholder="Producent" required>
+        
+        <input type="text" id="krotkiOpisForm" name="krotki_opis" placeholder="Krótki opis" required>
+        <input type="text" id="dlugiOpisForm" name="dlugi_opis" placeholder="Długi opis" required>
         <input type="number" name="cena" step="0.01" placeholder="Cena" required>
+        
         <input type="date" name="data_wydania" required>
-
+        
+        Zdjęcie <input type="file" name="zdjGlowne" accept="image/*">
         <h3>Wybierz Systemy</h3>
         <label>
             <input id="systemChecks" type="checkbox" name="windows" value="1"> Windows
@@ -134,6 +183,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <label>
             <input id="systemChecks" type="checkbox" name="mac" value="1"> Mac
         </label>
+        <h3>Tagi (oddziel przecinkami)</h3>
+<input type="text" name="tags_text" placeholder="np. Akcja, Horror, Puzzle">
 
         <h3>Oznaczenia PEGI (Opcjonalne)</h3>
         <div id="pegiContainer">
@@ -159,6 +210,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <div id="onePegiContain">
                 <input id="pegiChecks" type="checkbox" name="czyDyskryminacja" value="1"> <img src="images/dyskryminacja.jpg" width="50"><br>
             </div>
+            
         </div>
             <button type="submit">Dodaj Grę</button>
     </form>

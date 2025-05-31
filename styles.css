@@ -9,14 +9,13 @@
 
 body {
     font-family: 'Jost', sans-serif;
-    background: #00296b;  /* Egyptian Blue */
+    background: #0C1336;  /* Egyptian Blue */
     color: #CFDEE7;        /* Columbia Blue */
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
 }
-
 /* Main Container */
 .main-container {
     text-align: center;
@@ -97,6 +96,10 @@ form {
     border-radius: 10px;
     width: 400px;
 }
+.game-info form
+{
+    background: none;
+}
 input, select {
     margin-bottom: 10px;
     padding: 8px;
@@ -144,11 +147,10 @@ button {
 }
 
 .steam-container {
-    margin: 170px 0px 0px 0px;
     padding: 20px;
     background-color: #2a475e23;
     border-radius: 10px;
-    
+    height: auto;
 }
 
 #navigationContainer h4
@@ -350,4 +352,128 @@ button {
     justify-content: center;
     align-items: center;
     display: flex;
+}
+
+.purchase-message {
+            font-weight: bold;
+            margin: 10px 0;
+}
+.purchase-message.success 
+{ 
+    color: green; 
+}
+.purchase-message.info 
+{ 
+    color: rgb(214, 214, 214); 
+}
+
+
+.navbar {
+    background-color: #373D5B;
+    padding: 1rem 0;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.logo img {
+    height: 40px;
+}
+
+
+.platform-name {
+    color: #ffffff;
+    font-size: 1.5rem;
+    margin-right: 3rem;
+    font-weight: bold;
+}
+
+.nav-links {
+    display: flex;
+    gap: 2rem;
+	position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.nav-links a {
+    color: #FFFFFF;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 1rem;
+    transition: color 0.3s;
+}
+.nav-links a:hover {
+    color: #f6e30b;
+}
+
+
+.user-profile {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-left: 20px;
+}
+
+.user-avatar {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    
+}   
+.username {
+    color: #f6e30b;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.navbar h1
+{
+    margin-bottom: 0px;
+}
+#krotkiOpisForm
+{
+    width: 500px;
+    height: 55px;
+}
+#dlugiOpisForm
+{
+    width: 500px;
+    height:100px;
+}
+#footer
+{
+        background-color: #373D5B;
+    padding: 1rem 0;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 20px;
+}
+#footer a
+{
+    color: white;
+}
+.user-profile a
+{
+    text-decoration: none;
+    color: #f6e30b;
+}
+#searchBar form
+{
+    background: none;
+}
+.platform-name a
+{
+    color: yellow;
+    text-decoration: none;
 }
