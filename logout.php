@@ -5,6 +5,6 @@ $_SESSION = [];
 session_destroy();
 
 // Redirect to login or homepage after logout
-header("Location: login.php");
+header("Location: main");
 exit;
 ?>

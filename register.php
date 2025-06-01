@@ -38,7 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt->bind_param("sss", $username, $email, $password_hash);
             if ($stmt->execute()) {
                 $_SESSION['user'] = $username;
-                header("Location: dashboard.php"); // or main page
+                header("Location: profile"); // or main page
                 exit;
             } else {
                 $errors[] = "Błąd rejestracji. Spróbuj ponownie.";

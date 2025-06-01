@@ -11,6 +11,21 @@ $user_id = $_SESSION['user_id'] ?? 0;
 $username = $_SESSION['user'] ?? 'Gość';  // fallback if not logged in
 $avatar = $_SESSION['avatar'] ?? 'default.jpg';  // fallback avatar image
 // Get game data
+$nick = $_SESSION['user'];
+
+$stmt = $conn->prepare("SELECT ZdjecieProfilowe FROM Uzytkownik WHERE Nick = ?");
+$stmt->bind_param("s", $nick);
+$stmt->execute();
+$result = $stmt->get_result();
+
+if ($result->num_rows > 0) {
+    $row = $result->fetch_assoc();
+    $avatarTwoj = $row['ZdjecieProfilowe'] ?: 'default.jpg';
+} else {
+    $avatarTwoj = 'default.jpg';
+}
+
+
 $stmt = $conn->prepare("SELECT Tytul, zdjGlowne, WebGLFolderName FROM Gra WHERE IdGry = ?");
 $stmt->bind_param("i", $game_id);
 $stmt->execute();
@@ -56,11 +71,11 @@ if (!$game) {
         </div>
         <div class="user-profile">
     <?php if (isset($_SESSION['user']) && isset($_SESSION['user_id'])): ?>
-        <img src="images/<?php echo htmlspecialchars($_SESSION['avatar'] ?? 'default.jpg'); ?>" alt="User Avatar" class="user-avatar" width="40" height="40" />
-        <span class="username"><a href="profile.php"><?php echo htmlspecialchars($_SESSION['user']); ?></a></span>
+        <img src="images/<?php echo htmlspecialchars($avatarTwoj ?? 'default.jpg'); ?>" alt="User Avatar" class="user-avatar" width="40" height="40" />
+        <span class="username"><a href="profile"><?php echo htmlspecialchars($_SESSION['user']); ?></a></span>
     <?php else: ?>
         <img src="images/default.jpg" alt="Default Avatar" class="user-avatar" width="40" height="40" />
-        <span class="username"><a href="login.php">Zaloguj się</a></span>
+        <span class="username"><a href="login">Zaloguj się</a></span>
     <?php endif; ?>
 </div>
     </div>

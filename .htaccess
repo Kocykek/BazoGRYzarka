@@ -15,4 +15,7 @@
     RewriteRule ^register$ register.php [L]
     RewriteRule ^profile$ profile.php [L]
     RewriteRule ^main$ index.html [L]
+    RewriteRule ^gra$ gra.php [L]
+    RewriteRule ^edit_profile$ edit_profile.php [L]
+    RewriteRule ^create_review$ create_review.php [L]
 </IfModule>

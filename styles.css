@@ -9,7 +9,7 @@
 
 body {
     font-family: 'Jost', sans-serif;
-    background: #0C1336;  /* Egyptian Blue */
+    background-color: #0C1336;  /* Egyptian Blue */
     color: #CFDEE7;        /* Columbia Blue */
     display: flex;
     justify-content: center;
@@ -118,6 +118,7 @@ button {
     display: block;  /* ensure they behave like block elements */
     width: 100%;     /* full width */
     padding: 20px;
+    height: 100%;
 }
 .game-card {
     border: 1px solid #ccc;
@@ -301,7 +302,7 @@ button {
 }
 
 .game-thumb {
-    width: 120px;
+    width: 100px;
     height: 70px;
     object-fit: cover;
     border-radius: 4px;
@@ -312,7 +313,7 @@ button {
   width: 100%;
   padding: 15px 20px;
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-  margin: 50px 0px 50px 0px;
+  background: #262B47;
 }
 
 /* Align form elements inline */
@@ -333,6 +334,12 @@ button {
   padding: 8px 16px;
   cursor: pointer;
   font-size: 16px;
+  margin-bottom: 50px;
+  margin-top: 100px;
+  top: 115px;
+  position: absolute;
+  width: 120px;
+  left: 47%;
 }
 
 .game-titleCard {
@@ -476,4 +483,34 @@ button {
 {
     color: yellow;
     text-decoration: none;
+}
+#review
+{
+    width: 500px;
+    margin: 15px;
+}
+.review-container form
+{
+    width: 550px;
+    padding: 15px;
+}
+.review-container
+{
+    position: absolute;
+    left: 35%;
+}
+
+.user-box { margin: 15px; background: #1c1c1c; padding: 15px; margin-bottom: 15px; border-radius: 8px; box-shadow: 0 0 5px #ccc; }
+.review { margin-left: 20px; margin-top: 10px; padding-left: 10px; border-left: 3px solid #ddd; }
+.edit-profile-container
+{
+    color: white;
+}
+#divTagssForm
+{
+    display: flex;
+}
+#divTagssForm label
+{
+    padding: 2px;
 }

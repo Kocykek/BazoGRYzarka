@@ -12,14 +12,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $password = $_POST['password'];
 
     if ($username && $password) {
-        $stmt = $conn->prepare("SELECT Id_Uzytkownika, password_hash FROM Uzytkownik WHERE Nick = ?");
+        $stmt = $conn->prepare("SELECT Id_Uzytkownika, password_hash, ZdjecieProfilowe FROM Uzytkownik WHERE Nick = ?");
         $stmt->bind_param("s", $username);
         $stmt->execute();
-        $stmt->bind_result($user_id, $password_hash);
+        $stmt->bind_result($user_id, $password_hash, $zdjecieProfilowe);
         if ($stmt->fetch()) {
             if (password_verify($password, $password_hash)) {
                 $_SESSION['user'] = $username;
                 $_SESSION['user_id'] = $user_id;
+                $_SESSION['zdjecieProfilowe'] = $zdjecieProfilowe;
                 header("Location: profile"); // or main page
                 exit;
             } else {

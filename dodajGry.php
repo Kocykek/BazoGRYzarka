@@ -160,7 +160,7 @@ if (isset($_FILES['zdjGlowne']) && $_FILES['zdjGlowne']['error'] === UPLOAD_ERR_
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <form method="POST" enctype="multipart/form-data">
+    <form style="background: none;" method="POST" enctype="multipart/form-data">
         <h2>Dodaj Nową Grę</h2>
         <input type="text" name="tytul" placeholder="Tytuł gry" required>
         <input type="text" name="wydawca" placeholder="Wydawca" required>

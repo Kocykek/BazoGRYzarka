@@ -1,4 +1,6 @@
 <?php
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 session_start();
 
 // Connection
@@ -52,6 +54,49 @@ $stmt->bind_param("i", $id);
 $stmt->execute();
 $result = $stmt->get_result();
 $game = $result->fetch_assoc();
+
+$tags = [];
+$tagStmt = $conn->prepare("SELECT T.Nazwa FROM TagGry TG JOIN Tagi   T ON TG.Id_tagu = T.Id_tagu WHERE TG.Id_Gry = ?");
+$tagStmt->bind_param("i", $id);
+$tagStmt->execute();
+$tagResult = $tagStmt->get_result();
+while ($row = $tagResult->fetch_assoc()) {
+    $tags[] = $row['Nazwa'];
+}
+$tagStmt->close();
+
+$nick = $_SESSION['user'];
+
+$stmt = $conn->prepare("SELECT ZdjecieProfilowe FROM Uzytkownik WHERE Nick = ?");
+$stmt->bind_param("s", $nick);
+$stmt->execute();
+$result = $stmt->get_result();
+
+if ($result->num_rows > 0) {
+    $row = $result->fetch_assoc();
+    $avatar = $row['ZdjecieProfilowe'] ?: 'default.jpg';
+} else {
+    $avatar = 'default.jpg';
+}
+
+$ratingInfo = [
+    'avg' => null,
+    'count' => 0
+];
+
+$ratingStmt = $conn->prepare("SELECT AVG(Typ) AS srednia, COUNT(*) AS liczba FROM Recenzje WHERE Id_Gry = ?");
+$ratingStmt->bind_param("i", $id);
+$ratingStmt->execute();
+$ratingResult = $ratingStmt->get_result();
+if ($ratingResult->num_rows > 0) {
+    $row = $ratingResult->fetch_assoc();
+    $ratingInfo['avg'] = $row['srednia'] !== null ? round($row['srednia'], 1) : null;
+
+    $ratingInfo['count'] = $row['liczba'];
+}
+$ratingStmt->close();
+
+
 $stmt->close();
 $conn->close();
 ?>
@@ -67,7 +112,7 @@ $conn->close();
 <?php if ($game): ?>
     <nav class="navbar">
     <div class="nav-container">
-        <h1 class="platform-name"><a href="main">BazoGRYzarka</a></h1>
+        <h1 class="platform-name"><a href="/BazoGRYzarka/main">BazoGRYzarka</a></h1>
         <div class="nav-links">
             <a href="/BazoGRYzarka/sklep">Sklep</a>
             <a href="/BazoGRYzarka/library">Biblioteka</a>
@@ -76,11 +121,11 @@ $conn->close();
         </div>
         <div class="user-profile">
     <?php if (isset($_SESSION['user']) && isset($_SESSION['user_id'])): ?>
-        <img src="images/<?php echo htmlspecialchars($_SESSION['avatar'] ?? 'default.jpg'); ?>" alt="User Avatar" class="user-avatar" width="40" height="40" />
-        <span class="username"><a href="profile.php"><?php echo htmlspecialchars($_SESSION['user']); ?></a></span>
+        <img src="/BazoGRYzarka/images/<?php echo htmlspecialchars($avatar ?? '/BazoGRYzarka/images/default.jpg'); ?>" alt="User Avatar" class="user-avatar" width="40" height="40" />
+        <span class="username"><a href="/BazoGRYzarka/profile"><?php echo htmlspecialchars($_SESSION['user']); ?></a></span>
     <?php else: ?>
-        <img src="images/default.jpg" alt="Default Avatar" class="user-avatar" width="40" height="40" />
-        <span class="username"><a href="login.php">Zaloguj się</a></span>
+        <img src="/BazoGRYzarka/images/default.jpg" alt="Default Avatar" class="user-avatar" width="40" height="40" />
+        <span class="username"><a href="/BazoGRYzarka/login">Zaloguj się</a></span>
     <?php endif; ?>
 </div>
     </div>
@@ -132,7 +177,33 @@ $conn->close();
                 echo implode(" ", $systems);
                 ?>
             </p>
+
+            <p><strong>Tagi:</strong>
+
+                    <?php
+if (!empty($tags)) {
+    echo implode(", ", array_map('htmlspecialchars', $tags));
+} else {
+    echo "Brak tagów";
+}
+?>
+
+            </p>
+<p><strong>Ocena:</strong>
+    <?php
+    if ($ratingInfo['count'] > 0) {
+        echo "{$ratingInfo['avg']} ★ ({$ratingInfo['count']} recenzji)";
+    } else {
+        echo "Brak recenzji";
+    }
+    ?>
+</p>
+
         </div>
+
+
+            
+
 
         <div class="back-link">
             <a href="/BazoGRYzarka/sklep">← Wróć do sklepu</a>
